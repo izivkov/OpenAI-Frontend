@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_question">
+
+    <fragment
+        android:id="@+id/navigation_question"
+        android:name="org.avmedia.openaiandroid.ui.question.QuestionFragment"
+        android:label="@string/title_ask_question"
+        tools:layout="@layout/fragment_question" />
+
+    <fragment
+        android:id="@+id/navigation_draw"
+        android:name="org.avmedia.openaiandroid.ui.draw.DrawFragment"
+        android:label="@string/title_draw"
+        tools:layout="@layout/fragment_draw" />
+
+    <fragment
+        android:id="@+id/navigation_summarize_web"
+        android:name="org.avmedia.openaiandroid.ui.summarize_web.SummarizeWebFragment"
+        android:label="@string/title_summarize_web"
+        tools:layout="@layout/fragment_summarize_web" />
+</navigation>

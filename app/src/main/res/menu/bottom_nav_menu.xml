@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_question"
+        android:icon="@drawable/question"
+        android:title="@string/title_ask_question" />
+
+    <item
+        android:id="@+id/navigation_draw"
+        android:icon="@drawable/draw"
+        android:title="@string/title_draw" />
+
+    <item
+        android:id="@+id/navigation_summarize_web"
+        android:icon="@drawable/summarize_web"
+        android:title="@string/title_summarize_web" />
+</menu>

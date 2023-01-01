@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">OpenAI Android</string>
+    <string name="title_summarize_web">Summarize Web</string>
+    <string name="title_draw">Draw</string>
+    <string name="title_ask_question">Ask me a Question</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
