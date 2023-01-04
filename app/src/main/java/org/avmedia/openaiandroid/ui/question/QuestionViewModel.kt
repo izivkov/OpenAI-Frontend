@@ -22,7 +22,6 @@ class QuestionViewModel : ViewModel() {
     var clearButtonClicked = MutableLiveData<Boolean>()
     fun onClearButtonClicked() {
         clearButtonClicked.value = true
-        questionEditTextValue.value = ""
     }
 
     // submit button

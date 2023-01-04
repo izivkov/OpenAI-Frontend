@@ -6,14 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.runBlocking
+import org.avmedia.openaiandroid.FragmentAdaptor
 import org.avmedia.openaiandroid.OpenAIConnection
+import org.avmedia.openaiandroid.R
 import org.avmedia.openaiandroid.databinding.FragmentQuestionBinding
+import org.avmedia.openaiandroid.ui.common_fragments.ButtonsFragment
+import org.avmedia.openaiandroid.ui.common_fragments.InputEditTextFragment
+import org.avmedia.openaiandroid.ui.common_fragments.OutputTextFragment
 
 class QuestionFragment : Fragment() {
 
@@ -23,65 +25,103 @@ class QuestionFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    private lateinit var inputEditTextFragment: InputEditTextFragment
+    private lateinit var outputTextFragment: OutputTextFragment
+    private lateinit var buttonsFragment: ButtonsFragment
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        inputEditTextFragment = InputEditTextFragment()
+        outputTextFragment = OutputTextFragment()
+        buttonsFragment = ButtonsFragment()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        createChildFragments()
+
         val questionViewModel =
             ViewModelProvider(this).get(QuestionViewModel::class.java)
 
         _binding = FragmentQuestionBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val questionTextView: EditText = binding.questionText
-        questionTextView.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus) {
-                //
-            } else {
-                //
-            }
-        }
+        childFragmentManager.setFragmentResultListener("whoClicked", this) { requestKey, bundle ->
+            // We use a String here, but any type that can be put in a Bundle is supported
+            val clicker = bundle.getString("btnName")
 
-        questionViewModel.getQuestionEditTextValue().observe(viewLifecycleOwner, Observer<String> {
-            questionTextView.setText(it)
-        })
-
-        // clear button
-        val clearButton = binding.clearButton
-        clearButton.setOnClickListener {
-            questionViewModel.onClearButtonClicked()
-        }
-
-        // submit button
-        val submitButton = binding.submitButton
-        submitButton.setOnClickListener {
-
-            val questionTextView: EditText = binding.questionText
-            val question = questionTextView.text.toString()
-
-            // hide keyboard
-            val inputMethodManager = context?.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
-
-            questionViewModel.onSubmitButtonClicked()
-            runBlocking {
-                if (question.isEmpty()) {
-                    questionViewModel.setAnswerTextValue("Please enter a valid question")
-                    return@runBlocking
+            when (clicker) {
+                "Clear" -> {
+                    inputEditTextFragment.setText("")
                 }
-                val data = OpenAIConnection.getDataAsync(question).await()
-                questionViewModel.setAnswerTextValue(data)
+                "Submit" -> {
+                    // hide keyboard
+                    val inputMethodManager =
+                        context?.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
+
+                    questionViewModel.onSubmitButtonClicked()
+                    runBlocking {
+                        if (getTextFromEditTextFragment().isEmpty()) {
+                            outputTextFragment.setText("Please enter a valid question")
+                            return@runBlocking
+                        }
+                        val data =
+                            OpenAIConnection.getDataAsync(getTextFromEditTextFragment()).await()
+                        outputTextFragment.setText(data)
+                    }
+                }
             }
         }
-
-        // answer text
-        val answerTextView: TextView = binding.textViewAnswer
-        questionViewModel.getAnswerTextValue().observe(viewLifecycleOwner, Observer<String> {
-            answerTextView.setText(it)
-        })
 
         return root
+    }
+
+    private fun createChildFragments() {
+        val bundleQuestion = Bundle()
+
+        // Input text (question) fragment
+        bundleQuestion.clear()
+        bundleQuestion.putString("hint", "Please enter a question here.")
+        bundleQuestion.putInt("maxHeight", 200)
+        bundleQuestion.putInt("textSize", 16)
+        FragmentAdaptor(
+            inputEditTextFragment,
+            bundleQuestion,
+            R.id.fragment_question_container,
+            childFragmentManager
+        ).create()
+
+        // Input text (question) fragment
+        val bundleButtons = Bundle()
+        bundleButtons.clear()
+        bundleButtons.putString("buttons", "[{name:\"Clear\"},{name:\"Submit\"}]")
+        FragmentAdaptor(
+            buttonsFragment,
+            bundleButtons,
+            R.id.fragment_buttons_container,
+            childFragmentManager
+        ).create()
+
+        // Output text (answer) fragment
+        val bundleAnswer = Bundle()
+        bundleAnswer.clear()
+        bundleAnswer.putString("text", "")
+        bundleAnswer.putInt("textSize", 16)
+        FragmentAdaptor(
+            outputTextFragment,
+            bundleAnswer,
+            R.id.fragment_answer_container,
+            childFragmentManager
+        ).create()
+    }
+
+    private fun getTextFromEditTextFragment(): String {
+        return inputEditTextFragment.getText()
     }
 
     override fun onDestroyView() {

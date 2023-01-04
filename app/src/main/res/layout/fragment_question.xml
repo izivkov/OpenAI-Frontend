@@ -24,14 +24,12 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/title_question">
 
-        <EditText
-            android:id="@+id/question_text"
+        <FrameLayout
+            android:id="@+id/fragment_question_container"
+            android:name="org.avmedia.openaiandroid.InputEditTextFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter your question here."
-            android:maxHeight="200dp"
-            android:textSize="20dp"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_weight="1" />
 
     </androidx.cardview.widget.CardView>
 
@@ -42,29 +40,13 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/card_view_question">
 
-        <LinearLayout
+
+        <FrameLayout
+            android:id="@+id/fragment_buttons_container"
+            android:name="org.avmedia.openaiandroid.ButtonsFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/input_text">
-
-            <Button
-                android:id="@+id/clear_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:text="Clear" />
-
-            <Button
-                android:id="@+id/submit_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:text="Submit" />
-
-        </LinearLayout>
+            android:layout_weight="1" />
 
     </androidx.cardview.widget.CardView>
 
@@ -77,15 +59,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         >
 
-        <ScrollView
+        <FrameLayout
+            android:id="@+id/fragment_answer_container"
+            android:name="org.avmedia.openaiandroid.OutputTextFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/text_view_answer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </ScrollView>
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
