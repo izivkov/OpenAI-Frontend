@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.runBlocking
 import org.avmedia.openaiandroid.FragmentAdaptor
+import org.avmedia.openaiandroid.FragmentAdaptor.*
 import org.avmedia.openaiandroid.OpenAIConnection
 import org.avmedia.openaiandroid.R
 import org.avmedia.openaiandroid.databinding.FragmentQuestionBinding
@@ -50,35 +51,39 @@ class QuestionFragment : Fragment() {
         _binding = FragmentQuestionBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        childFragmentManager.setFragmentResultListener("whoClicked", this) { requestKey, bundle ->
-            // We use a String here, but any type that can be put in a Bundle is supported
-            val clicker = bundle.getString("btnName")
-
-            when (clicker) {
-                "Clear" -> {
-                    inputEditTextFragment.setText("")
-                }
-                "Submit" -> {
-                    // hide keyboard
-                    val inputMethodManager =
-                        context?.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                    inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
-
-                    questionViewModel.onSubmitButtonClicked()
-                    runBlocking {
-                        if (getTextFromEditTextFragment().isEmpty()) {
-                            outputTextFragment.setText("Please enter a valid question")
-                            return@runBlocking
-                        }
-                        val data =
-                            OpenAIConnection.getDataAsync(getTextFromEditTextFragment()).await()
-                        outputTextFragment.setText(data)
-                    }
-                }
-            }
-        }
+        setButtonHandlers ()
 
         return root
+    }
+
+    private fun setButtonHandlers () {
+        var childToParentHandlerBundle:Array<ChildToParentDataHandler> = arrayOf(
+            ChildToParentDataHandler("Clear", ::handleClearButton),
+            ChildToParentDataHandler("Submit", ::handleSubmitButton),
+        )
+        FragmentAdaptor.setListener (this, buttonsFragment, "btnName", childToParentHandlerBundle)
+    }
+
+    // Handle button clicks from the ButtonsFragment
+    private fun handleClearButton () {
+        inputEditTextFragment.setText("")
+    }
+
+    private fun handleSubmitButton () {
+        // hide keyboard
+        val inputMethodManager =
+            context?.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
+
+        runBlocking {
+            if (getTextFromEditTextFragment().isEmpty()) {
+                outputTextFragment.setText("Please enter a valid question")
+                return@runBlocking
+            }
+            val data =
+                OpenAIConnection.getDataAsync(getTextFromEditTextFragment()).await()
+            outputTextFragment.setText(data)
+        }
     }
 
     private fun createChildFragments() {

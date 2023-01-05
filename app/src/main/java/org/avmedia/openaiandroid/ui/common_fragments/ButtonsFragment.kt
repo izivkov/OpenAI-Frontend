@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.LinearLayout
 import androidx.core.os.bundleOf
+import androidx.core.view.marginLeft
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import org.json.JSONArray
@@ -39,7 +39,7 @@ class ButtonsFragment : Fragment() {
         val linearLayout = LinearLayout(context)
 
         for (index in 0 until buttonsArray.length()) {
-            val btn = Button(context)
+            val btn = com.google.android.material.button.MaterialButton(requireContext())
 
             val jsonButton = buttonsArray.getJSONObject(index)
             val btnName = jsonButton.getString("name")
@@ -47,11 +47,11 @@ class ButtonsFragment : Fragment() {
 
             btn.layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+                LinearLayout.LayoutParams.WRAP_CONTENT,
             )
 
             btn.setOnClickListener {
-                setFragmentResult("whoClicked", bundleOf("btnName" to btnName))
+                setFragmentResult("childToParentInfo", bundleOf("btnName" to btnName))
             }
 
             linearLayout.addView(btn)
