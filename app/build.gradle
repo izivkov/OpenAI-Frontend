@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'org.avmedia.openaiandroid'
+    namespace 'org.avmedia.openaifrontend'
     compileSdk 33
 
     defaultConfig {
-        applicationId "org.avmedia.openaiandroid"
+        applicationId "org.avmedia.openaifrontend"
         minSdk 26
         targetSdk 33
         versionCode 1

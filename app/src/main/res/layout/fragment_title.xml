@@ -40,18 +40,5 @@
                 android:text="Update API KEY" />
 
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_margin="0dp"
-                android:background="#DCDCDC" />
-
-        </LinearLayout>
     </LinearLayout>
 </FrameLayout>

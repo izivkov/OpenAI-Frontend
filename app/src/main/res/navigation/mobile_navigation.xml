@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_question"
-        android:name="org.avmedia.openaiandroid.ui.question.QuestionFragment"
+        android:name="org.avmedia.openaifrontend.ui.question.QuestionFragment"
         android:label="@string/title_ask_question"
         tools:layout="@layout/fragment_question" />
 
     <fragment
         android:id="@+id/navigation_image"
-        android:name="org.avmedia.openaiandroid.ui.image.ImageFragment"
+        android:name="org.avmedia.openaifrontend.ui.image.ImageFragment"
         android:label="Generate Image"
         tools:layout="@layout/fragment_image" />
 
     <fragment
         android:id="@+id/navigation_summarize_web"
-        android:name="org.avmedia.openaiandroid.ui.summarize_web.SummarizeWebFragment"
+        android:name="org.avmedia.openaifrontend.ui.summarize_web.SummarizeWebFragment"
         android:label="@string/title_summarize_web"
         tools:layout="@layout/fragment_summarize_web" />
 </navigation>
