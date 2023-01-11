@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/api_key_input"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:hint="Enter API Key" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+        <TextView android:id="@+id/register_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You can register to OpenAI here:" />
+
+        <TextView android:id="@+id/register_openai"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:autoLink="all"
+            android:text="https://openai.com/api/" />
+
+        <TextView android:id="@+id/link_to_api_key_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="... and then can get the API Key here:" />
+
+        <TextView android:id="@+id/link_to_api_key"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+        android:autoLink="all"
+        android:text="https://beta.openai.com" />
+
+    </LinearLayout>
+
+</LinearLayout>

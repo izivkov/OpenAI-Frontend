@@ -7,9 +7,9 @@
         android:title="@string/title_ask_question" />
 
     <item
-        android:id="@+id/navigation_draw"
-        android:icon="@drawable/draw"
-        android:title="@string/title_draw" />
+        android:id="@+id/navigation_image"
+        android:icon="@drawable/image"
+        android:title="Generate Image" />
 
     <item
         android:id="@+id/navigation_summarize_web"

@@ -1,13 +1,13 @@
-package org.avmedia.openaiandroid.ui.draw
+package org.avmedia.openaiandroid.ui.image
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class DrawViewModel : ViewModel() {
+class ImageViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is Draw Fragment"
+        value = "This is Image Fragment"
     }
     val text: LiveData<String> = _text
 }

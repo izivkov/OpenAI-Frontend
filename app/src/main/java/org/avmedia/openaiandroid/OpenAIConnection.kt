@@ -2,20 +2,28 @@ package org.avmedia.openaiandroid
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import org.avmedia.openaiandroid.MainActivity.Companion.applicationContext
+import org.avmedia.openaiandroid.utils.LocalDataStorage
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.FileNotFoundException
 import java.net.HttpURLConnection
 import java.net.URL
 
 object OpenAIConnection {
-    private fun submitRequestGetData(question:String):String {
+    private val apiKey:String = LocalDataStorage.get("apikey", "", applicationContext()) as String
+
+    private fun submitRequestGetData(question: String): String {
         val url = URL("https://api.openai.com/v1/completions")
         val httpClient = url.openConnection() as HttpURLConnection
         httpClient.requestMethod = "POST"
 
         // Add request header
         httpClient.setRequestProperty("Content-Type", "application/json")
-        httpClient.setRequestProperty("Authorization", "Bearer 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")
+        httpClient.setRequestProperty(
+            "Authorization",
+            "Bearer $apiKey"
+        )
 
         // Build the body of the request
         val body = JSONObject()
@@ -34,15 +42,62 @@ object OpenAIConnection {
         outputStream.close()
 
         // Get the response
-        val responseCode = httpClient.responseCode
-        val responseMessage = httpClient.responseMessage
-        val inputStream = httpClient.inputStream
-        val responseBody = inputStream.bufferedReader().readText()
-        return ((JSONObject(responseBody).get("choices") as JSONArray)[0] as JSONObject).get("text") as String
+        return try {
+            val inputStream = httpClient.inputStream
+            val responseBody = inputStream.bufferedReader().readText()
+            val text = ((JSONObject(responseBody).get("choices") as JSONArray)[0] as JSONObject).get("text") as String
+            "{error: \"\", text:\"${cleanText(text)}\"}"
+        } catch (e: FileNotFoundException) {
+            "{error: \"Cannot get the answer. Are you sure you have a valid API Key?.\", text:\"\"}"
+        }
     }
 
-    fun getDataAsync(question:String) = GlobalScope.async {
+    private fun submitRequestGetImage(question: String): String {
+        val url = URL("https://api.openai.com/v1/images/generations")
+        val httpClient = url.openConnection() as HttpURLConnection
+        httpClient.requestMethod = "POST"
+
+        // Add request header
+        httpClient.setRequestProperty("Content-Type", "application/json")
+        httpClient.setRequestProperty(
+            "Authorization",
+            "Bearer $apiKey"
+        )
+
+        // Build the body of the request
+        val body = JSONObject()
+        body.put("prompt", question)
+        body.put("n", 1)
+        body.put("size", "512x512")
+
+        // Send the request
+        httpClient.doOutput = true
+        val outputStream = httpClient.outputStream
+        outputStream.write(body.toString().toByteArray())
+        outputStream.flush()
+        outputStream.close()
+
+        // Get the response
+        return try {
+            val inputStream = httpClient.inputStream
+            val responseBody = inputStream.bufferedReader().readText()
+            val url =
+                ((JSONObject(responseBody).get("data") as JSONArray)[0] as JSONObject).get("url") as String
+             "{error: \"\", url:\"${cleanText(url)}\"}"
+        } catch (e: FileNotFoundException) {
+            "{error: \"Cannot generate image. May violate policy.\", url:\"\"}"
+        }
+    }
+
+    private fun cleanText (inText:String) :String {
+        return inText.trim().replace("\"", "\\\"")
+    }
+
+    fun getDataAsync(question: String) = GlobalScope.async {
         return@async submitRequestGetData(question)
     }
 
+    fun getImageAsync(question: String) = GlobalScope.async {
+        return@async submitRequestGetImage(question)
+    }
 }

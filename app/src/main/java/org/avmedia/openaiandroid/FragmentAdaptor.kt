@@ -1,5 +1,6 @@
 package org.avmedia.openaiandroid
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -20,7 +21,6 @@ class FragmentAdaptor(
     companion object {
         fun setListener(
             parent: Fragment,
-            child: Fragment,
             dataKey: String,
             dataHandlers: Array<ChildToParentDataHandler>
         ) {

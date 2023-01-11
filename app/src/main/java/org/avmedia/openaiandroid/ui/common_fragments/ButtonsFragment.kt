@@ -37,6 +37,14 @@ class ButtonsFragment : Fragment() {
         val buttonsArray = JSONArray(buttonDescriptionArray)
 
         val linearLayout = LinearLayout(context)
+        linearLayout.orientation = LinearLayout.HORIZONTAL
+
+        var layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+        )
+
+        layoutParams.weight = buttonsArray.length().toFloat()
 
         for (index in 0 until buttonsArray.length()) {
             val btn = com.google.android.material.button.MaterialButton(requireContext())
@@ -45,10 +53,14 @@ class ButtonsFragment : Fragment() {
             val btnName = jsonButton.getString("name")
             btn.text = btnName
 
-            btn.layoutParams = LinearLayout.LayoutParams(
+            val btnParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
             )
+            btnParams.weight = 1f
+            btnParams.marginEnd = 20
+            btnParams.marginStart = 20
+            btn.layoutParams = btnParams
 
             btn.setOnClickListener {
                 setFragmentResult("childToParentInfo", bundleOf("btnName" to btnName))
@@ -64,7 +76,7 @@ class ButtonsFragment : Fragment() {
             )
         }
 
-        container?.addView(linearLayout)
+        container?.addView(linearLayout, layoutParams)
         return view
     }
 }

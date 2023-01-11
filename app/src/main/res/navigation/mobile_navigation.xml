@@ -12,10 +12,10 @@
         tools:layout="@layout/fragment_question" />
 
     <fragment
-        android:id="@+id/navigation_draw"
-        android:name="org.avmedia.openaiandroid.ui.draw.DrawFragment"
-        android:label="@string/title_draw"
-        tools:layout="@layout/fragment_draw" />
+        android:id="@+id/navigation_image"
+        android:name="org.avmedia.openaiandroid.ui.image.ImageFragment"
+        android:label="Generate Image"
+        tools:layout="@layout/fragment_image" />
 
     <fragment
         android:id="@+id/navigation_summarize_web"

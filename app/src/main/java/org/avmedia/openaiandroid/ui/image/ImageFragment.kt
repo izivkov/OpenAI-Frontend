@@ -1,6 +1,6 @@
-package org.avmedia.openaiandroid.ui.question
+package org.avmedia.openaiandroid.ui.image
 
-import android.content.Context.INPUT_METHOD_SERVICE
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,33 +9,32 @@ import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import kotlinx.coroutines.runBlocking
 import org.avmedia.openaiandroid.FragmentAdaptor
-import org.avmedia.openaiandroid.FragmentAdaptor.ChildToParentDataHandler
 import org.avmedia.openaiandroid.OpenAIConnection
 import org.avmedia.openaiandroid.R
-import org.avmedia.openaiandroid.databinding.FragmentQuestionBinding
+import org.avmedia.openaiandroid.databinding.FragmentImageBinding
 import org.avmedia.openaiandroid.ui.common_fragments.ButtonsFragment
 import org.avmedia.openaiandroid.ui.common_fragments.InputEditTextFragment
-import org.avmedia.openaiandroid.ui.common_fragments.OutputTextFragment
+import org.avmedia.openaiandroid.ui.common_fragments.OutputImageFragment
 import org.avmedia.openaiandroid.ui.common_fragments.TitleFragment
 import org.json.JSONObject
 
-class QuestionFragment : Fragment() {
+class ImageFragment : Fragment() {
 
-    private var _binding: FragmentQuestionBinding? = null
+    private var _binding: FragmentImageBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
     private lateinit var inputEditTextFragment: InputEditTextFragment
-    private lateinit var outputTextFragment: OutputTextFragment
+    private lateinit var outputImageFragment: OutputImageFragment
     private lateinit var buttonsFragment: ButtonsFragment
     private lateinit var titleFragment: TitleFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         inputEditTextFragment = InputEditTextFragment()
-        outputTextFragment = OutputTextFragment()
+        outputImageFragment = OutputImageFragment()
         buttonsFragment = ButtonsFragment()
         titleFragment = TitleFragment()
     }
@@ -48,18 +47,16 @@ class QuestionFragment : Fragment() {
 
         createChildFragments()
 
-        _binding = FragmentQuestionBinding.inflate(inflater, container, false)
+        _binding = FragmentImageBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
         setButtonHandlers()
-
         return root
     }
 
     private fun setButtonHandlers() {
-        var childToParentHandlerBundle: Array<ChildToParentDataHandler> = arrayOf(
-            ChildToParentDataHandler("Clear", ::handleClearButton),
-            ChildToParentDataHandler("Submit", ::handleSubmitButton),
+        var childToParentHandlerBundle: Array<FragmentAdaptor.ChildToParentDataHandler> = arrayOf(
+            FragmentAdaptor.ChildToParentDataHandler("Clear", ::handleClearButton),
+            FragmentAdaptor.ChildToParentDataHandler("Generate Image", ::handleImageButton),
         )
         FragmentAdaptor.setListener(this, "btnName", childToParentHandlerBundle)
     }
@@ -69,35 +66,38 @@ class QuestionFragment : Fragment() {
         inputEditTextFragment.setText("")
     }
 
-    private fun handleSubmitButton() {
+    private fun handleImageButton() {
         // hide keyboard
         val inputMethodManager =
-            context?.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
 
         runBlocking {
             if (getTextFromEditTextFragment().isEmpty()) {
-                outputTextFragment.setText("Please enter a valid question")
                 return@runBlocking
             }
             val response =
-                OpenAIConnection.getDataAsync(getTextFromEditTextFragment()).await()
-
-            val text = JSONObject(response).getString("text")
+                OpenAIConnection.getImageAsync(getTextFromEditTextFragment()).await()
+            val url = JSONObject(response).getString("url")
             val error = JSONObject(response).getString("error")
-            if (error.isNotEmpty()) {
-                outputTextFragment.setText(error)
-            } else {
-                outputTextFragment.setText(text)
-            }
+            outputImageFragment.setError(error)
+            outputImageFragment.setImage(url)
         }
     }
 
-    private fun createChildFragments() {
+    private fun getTextFromEditTextFragment(): String {
+        return inputEditTextFragment.getText()
+    }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun createChildFragments() {
         val bundleTitle = Bundle()
         bundleTitle.clear()
-        bundleTitle.putString("text", "Ask me a question")
+        bundleTitle.putString("text", "Generate Image")
         bundleTitle.putInt("textSize", 20)
 
         FragmentAdaptor(
@@ -107,10 +107,9 @@ class QuestionFragment : Fragment() {
             childFragmentManager
         ).create()
 
-        // Input text (question) fragment
         val bundleQuestion = Bundle()
         bundleQuestion.clear()
-        bundleQuestion.putString("hint", "Please enter a question here.")
+        bundleQuestion.putString("hint", "Describe what image you like to generate.")
         bundleQuestion.putInt("maxHeight", 200)
         bundleQuestion.putInt("textSize", 16)
         FragmentAdaptor(
@@ -123,7 +122,7 @@ class QuestionFragment : Fragment() {
         // Input text (question) fragment
         val bundleButtons = Bundle()
         bundleButtons.clear()
-        bundleButtons.putString("buttons", "[{name:\"Clear\"},{name:\"Submit\"}]")
+        bundleButtons.putString("buttons", "[{name:\"Clear\"},{name:\"Generate Image\"}]")
         FragmentAdaptor(
             buttonsFragment,
             bundleButtons,
@@ -132,24 +131,13 @@ class QuestionFragment : Fragment() {
         ).create()
 
         // Output text (answer) fragment
-        val bundleAnswer = Bundle()
-        bundleAnswer.clear()
-        bundleAnswer.putString("text", "")
-        bundleAnswer.putInt("textSize", 16)
+        val bundleImage = Bundle()
+        bundleImage.clear()
         FragmentAdaptor(
-            outputTextFragment,
-            bundleAnswer,
-            R.id.fragment_answer_container,
+            outputImageFragment,
+            bundleImage,
+            R.id.fragment_image_container,
             childFragmentManager
         ).create()
-    }
-
-    private fun getTextFromEditTextFragment(): String {
-        return inputEditTextFragment.getText()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
