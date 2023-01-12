@@ -4,19 +4,19 @@ OpenAI Frontend is an Android app designed to demonstrate the capabilities of Op
 
 ### Ask me a Question
 
-![Ask me a Question](./images/ask-ask-question.png)
+![Ask me a Question](./images/ask-question.png){width=300px}
 
 With this screen, you can ask a question, and the OpenAI platform will try to answer it.
 
 ### Dalle-2 Image Generation
 
-![Dalle-2 Image Generation](./images/dalle2.png)
+![Dalle-2 Image Generation](./images/dalle2.png){width=300px}
 
 Using Dalle-2, you can generate images by providing a text prompt.
 
 ### Article Summation
 
-![Article Summation](./images/article-summation.png)
+![Article Summation](./images/article-summation.png){width=300px}
 
 This screen allows you to enter a URL and generate a summary of the article.
 
