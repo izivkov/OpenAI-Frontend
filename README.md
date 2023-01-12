@@ -4,7 +4,8 @@ OpenAI Frontend is an Android app designed to demonstrate the capabilities of Op
 
 ### Ask me a Question
 
-![Ask me a Question](./images/ask-question.png){width=300px}
+![Ask me a Question]
+```<img src="./images/ask-question.png" width="300">```
 
 With this screen, you can ask a question, and the OpenAI platform will try to answer it.
 
