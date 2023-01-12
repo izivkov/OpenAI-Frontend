@@ -30,4 +30,5 @@ This screen allows you to enter a URL and generate a summary of the article.
 
 ## Getting an OpenAI API Key
 
-In order to use OpenAI Frontend, you need an OpenAI API Key. You can get one for free by registering for a [developer account](https://developer.openai.com/). Once you have registered, you will be able to find your API key in your profile settings.
+In order to use OpenAI Frontend, you need an OpenAI API Key. You can get one for free by registering for a [developer account](https://openai.com/api/).
+Once you have registered, you will be able to find your API key in your profile settings.
