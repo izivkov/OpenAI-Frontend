@@ -136,7 +136,7 @@ class SummarizeWebFragment : Fragment() {
         val bundleTitle = Bundle()
         bundleTitle.clear()
         bundleTitle.putString("text", "Summarize Article")
-        bundleTitle.putInt("textSize", 20)
+        bundleTitle.putInt("textSize", 16)
 
         FragmentAdaptor(
             titleFragment,

@@ -40,7 +40,7 @@ class TitleFragment : Fragment() {
         textView = view.findViewById(R.id.title_text)
         textView.text = text
 
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, (textSize ?: 20).toFloat())
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, (textSize ?: 18).toFloat())
 
         var updateApiKeyButton: Button = view.findViewById(R.id.update_api_key_button)
         updateApiKeyButton.setOnClickListener {

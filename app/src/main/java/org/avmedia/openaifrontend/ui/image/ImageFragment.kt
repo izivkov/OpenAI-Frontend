@@ -98,7 +98,7 @@ class ImageFragment : Fragment() {
         val bundleTitle = Bundle()
         bundleTitle.clear()
         bundleTitle.putString("text", "Generate Image")
-        bundleTitle.putInt("textSize", 20)
+        bundleTitle.putInt("textSize", 16)
 
         FragmentAdaptor(
             titleFragment,

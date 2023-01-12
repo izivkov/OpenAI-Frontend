@@ -98,7 +98,7 @@ class QuestionFragment : Fragment() {
         val bundleTitle = Bundle()
         bundleTitle.clear()
         bundleTitle.putString("text", "Ask me a question")
-        bundleTitle.putInt("textSize", 20)
+        bundleTitle.putInt("textSize", 16)
 
         FragmentAdaptor(
             titleFragment,
